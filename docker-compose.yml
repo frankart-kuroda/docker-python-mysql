@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  app:
+    build: ./python
+    volumes:
+      - ${PROJECT_PATH}:/root/src:cached
+    tty: true
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    volumes:
+      - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+      TZ: ${TZ}
+    ports:
+      - ${DB_PORT}:3306
+
+volumes:
+  mysql_data:
